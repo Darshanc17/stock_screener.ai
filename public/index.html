@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SC26 | AI Equity Research</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts for Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PDF.js for client-side text extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>SC26</h1>
+            </div>
+            <div class="header-tags">
+                <span class="tag live-tag"><span class="dot"></span> Live Report</span>
+                <span class="tag quarter-tag">Q4 FY24</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero glass-panel">
+                <div class="hero-header">
+                    <div class="company-info">
+                        <div class="ticker-input-wrapper">
+                            <div class="autocomplete-container">
+                                <input type="text" id="company-name" class="dynamic-input company-input" placeholder="Enter Company Name..." autocomplete="off">
+                                <ul id="autocomplete-results" class="autocomplete-list hidden"></ul>
+                            </div>
+                            <input type="text" id="company-ticker" class="dynamic-input ticker-input" placeholder="Ticker" readonly>
+                        </div>
+                        <span class="sector">Works with any NSE/BSE Stock</span>
+                    </div>
+                </div>
+                
+                <div class="verdict-cards">
+                    <div class="card" id="card-business">
+                        <h3>Business Understanding</h3>
+                        <p class="status-text pending">Awaiting Analysis...</p>
+                    </div>
+                    <div class="card" id="card-trend">
+                        <h3>Trend</h3>
+                        <p class="status-text pending">Awaiting Analysis...</p>
+                    </div>
+                    <div class="card" id="card-revenue">
+                        <h3>Revenue Quality</h3>
+                        <p class="status-text pending">Awaiting Analysis...</p>
+                    </div>
+                    <div class="card highlight-card" id="card-action">
+                        <h3>Recommended Action</h3>
+                        <p class="status-text pending verdict-text">---</p>
+                        <p class="score-text" id="overall-score"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Document Upload Section -->
+            <section class="upload-section glass-panel">
+                <div class="upload-header">
+                    <h2>Attach Financial Data</h2>
+                    <p>Upload Annual or Quarterly Reports (PDF) for deep analysis. Max 100 pages recommended.</p>
+                </div>
+                <div class="upload-dropzone" id="dropzone">
+                    <div class="upload-icon">📄</div>
+                    <p>Drag & Drop report here or <span class="browse-link">Browse</span></p>
+                    <input type="file" id="file-input" accept="application/pdf, text/plain" class="hidden-input">
+                </div>
+                <div id="upload-status" class="hidden">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="pdf-progress" style="width: 0%"></div>
+                    </div>
+                    <p id="pdf-status-text" class="status-text pending">Reading PDF...</p>
+                </div>
+            </section>
+
+            <!-- Investor AI Feature (CORE) -->
+            <section class="investor-section">
+                <h2>Legendary Analysis</h2>
+                <p class="subtitle">Select an investment philosophy to analyze this stock</p>
+                <div class="investor-buttons">
+                    <button class="investor-btn" data-investor="Warren Buffett">
+                        <div class="btn-icon buffett"></div>
+                        <span>Warren Buffett</span>
+                        <small>Value & Moat</small>
+                    </button>
+                    <button class="investor-btn" data-investor="Philip Fisher">
+                        <div class="btn-icon fisher"></div>
+                        <span>Philip Fisher</span>
+                        <small>Growth Quality</small>
+                    </button>
+                    <button class="investor-btn" data-investor="Peter Lynch">
+                        <div class="btn-icon lynch"></div>
+                        <span>Peter Lynch</span>
+                        <small>GARP Strategy</small>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="hidden">
+                <div class="spinner"></div>
+                <p>Synthesizing financial data...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="hidden glass-panel error-panel">
+                <h3>Analysis Failed</h3>
+                <p id="error-message">Could not fetch data. Please try again.</p>
+            </div>
+
+            <!-- Report Body (Hidden until generated) -->
+            <div id="report-content" class="hidden">
+                <div class="report-grid">
+                    <!-- Left Column -->
+                    <div class="column-left">
+                        <section class="report-section glass-panel">
+                            <h2>The Business in 5 Points</h2>
+                            <ul id="beginner-section" class="styled-list">
+                                <!-- Populated dynamically based on analysis text -->
+                            </ul>
+                        </section>
+
+                        <section class="report-section glass-panel">
+                            <h2>Analysis Details</h2>
+                            <div class="criteria-list" id="criteria-container">
+                                <!-- Dynamically populated criteria -->
+                            </div>
+                        </section>
+                        
+                        <section class="report-section glass-panel quote-section">
+                            <blockquote id="investor-quote"></blockquote>
+                            <cite id="quote-author"></cite>
+                        </section>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="column-right">
+                        <section class="report-section glass-panel">
+                            <h2>Scores</h2>
+                            <div class="scores-container" id="scores-container">
+                                <!-- Dynamically populated scores -->
+                            </div>
+                        </section>
+
+                        <section class="report-section glass-panel">
+                            <h2>Key Financial Metrics</h2>
+                            <div class="chart-container">
+                                <canvas id="financialChart"></canvas>
+                            </div>
+                        </section>
+
+                        <section class="report-section glass-panel">
+                            <h2>Investor's Take</h2>
+                            <p id="deep-analysis" class="analysis-text"></p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

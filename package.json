@@ -1,0 +1,12 @@
+{
+  "name": "sc26-research",
+  "version": "1.0.0",
+  "description": "SC26 - AI-powered equity research platform",
+  "main": "api/analyze.js",
+  "scripts": {
+    "start": "node api/analyze.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
