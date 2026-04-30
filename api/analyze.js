@@ -23,7 +23,7 @@ module.exports = exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Missing company or investor parameters' });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyDfOr9mJ5MMGS3dzvO8k5PC8g3UxPXUspM';
+  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyD3vNuVHR4CrFsb3C4SD06pbL1EF3wV90U';
 
   let prompt = `You are a professional equity research assistant.
 You are acting as the legendary investor ${investor}. Provide an equity research report for ${company} (${ticker || 'Unknown Ticker'}) based on your investment philosophy.`;
